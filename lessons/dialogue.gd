@@ -1,10 +1,14 @@
+@tool
+@icon("res://assets/dialogue_scene_icon.svg")
+
 extends Control
 
 ## An array of dictionaries. Each dictionary has three properties:
 ## - expression: a [code]Texture[/code] containing an expression
 ## - text: a [code]String[/code] containing the text the character says
 ## - character: a [code]Texture[/code] representing the character
-@export var dialogue_items: Array[DialogueItem] = []
+@export var dialogue_items: Array[DialogueItem] = []:
+	set = set_dialogue_items
 
 @onready var action_buttons_v_box_container: VBoxContainer = %ActionButtonsVBoxContainer
 ## UI element that shows the texts
@@ -18,6 +22,8 @@ extends Control
 
 
 func _ready() -> void:
+	if Engine.is_editor_hint():
+		return
 	show_text(0)
 ## Draws the current text to the rich text element
 func show_text(current_item_index: int) -> void:
@@ -88,3 +94,16 @@ func create_buttons(choices_data: Array[DialogueChoice]) -> void:
 			var target_line_idx := choice.target_line_idx
 			button.pressed.connect(show_text.bind(target_line_idx))
 			
+func set_dialogue_items(new_dialogue_items: Array[DialogueItem]) -> void:
+	for index in new_dialogue_items.size():
+		if new_dialogue_items[index] == null:
+			new_dialogue_items[index] = DialogueItem.new()
+	dialogue_items = new_dialogue_items
+	update_configuration_warnings()
+
+func _get_configuration_warnings() -> PackedStringArray:
+	if dialogue_items.is_empty():
+		return ["You need at least one dialouge item for the dialogue system to work."]
+	return []
+
+	
