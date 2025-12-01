@@ -7,3 +7,5 @@ res://lessons/slideshow.tscn
 res://lessons/slideshow_entry.gd
 res://lessons/test_slideshow_entry.tres
 res://lessons/slideshow.gd
+res://lessons/dialogue_choice.gd
+res://lessons/dialogue_item.gd
